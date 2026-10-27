@@ -1,0 +1,79 @@
+{
+  "ADD_INSIDE_rules": {
+    "payRequests": {
+      ".read": "auth != null && root.child('admins/' + auth.uid).val() === true",
+      ".indexOn": [
+        "at"
+      ],
+      "$id": {
+        ".write": "auth != null && (auth != null && root.child('admins/' + auth.uid).val() === true || (!data.exists() && newData.child('uid').val() === auth.uid))",
+        ".validate": "newData.hasChildren(['tenant','months','email']) && newData.child('months').isNumber() && newData.child('months').val() <= 36"
+      }
+    },
+    "notices": {
+      ".read": "auth != null",
+      ".indexOn": [
+        "at"
+      ],
+      "$id": {
+        ".write": "auth != null && root.child('admins/' + auth.uid).val() === true",
+        ".validate": "newData.child('title').isString() && newData.child('title').val().length < 120 && newData.child('body').val().length < 1000"
+      }
+    },
+    "trials": {
+      "$key": {
+        ".read": "auth != null",
+        ".write": "auth != null && !data.exists()",
+        ".validate": "newData.child('at').isNumber()"
+      }
+    },
+    "backups": {
+      ".read": "auth != null && root.child('admins/' + auth.uid).val() === true",
+      "$key": {
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.child('data').isString() && newData.child('data').val().length < 9500000"
+        }
+      }
+    },
+    "backupMeta": {
+      ".read": "auth != null && root.child('admins/' + auth.uid).val() === true",
+      "$key": {
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+    "trusted": {
+      "$key": {
+        ".read": "auth != null",
+        "$uid": {
+          ".write": "auth != null && (root.child('admins/'+auth.uid).val()===true || (auth.uid===$uid && !root.child('trusted/'+$key).exists()) || root.child('trusted/'+$key+'/'+auth.uid).val()===true)"
+        }
+      }
+    },
+    "verify": {
+      "$key": {
+        ".read": "auth != null && root.child('trusted/'+$key+'/'+auth.uid).val()===true",
+        "$dev": {
+          ".read": "auth != null && (root.child('trusted/'+$key+'/'+auth.uid).val()===true || data.child('uid').val()===auth.uid)",
+          ".write": "auth != null && (root.child('trusted/'+$key+'/'+auth.uid).val()===true || (!data.exists() && newData.child('uid').val()===auth.uid && newData.child('status').val()==='pending') || (data.child('uid').val()===auth.uid && !newData.exists()))"
+        }
+      }
+    },
+    "waAuth": {
+      ".read": "auth != null && root.child('admins/' + auth.uid).val() === true",
+      ".write": "auth != null && root.child('admins/' + auth.uid).val() === true"
+    },
+    "waQueue": {
+      ".read": "auth != null && root.child('admins/' + auth.uid).val() === true",
+      "$key": {
+        "$id": {
+          ".read": "auth != null && data.child('uid').val() === auth.uid",
+          ".write": "auth != null && (auth != null && root.child('admins/' + auth.uid).val() === true || (!data.exists() && newData.child('uid').val() === auth.uid && newData.child('status').val() === 'pending' && root.child('licenses/'+$key+'/expireAt').val() > now && root.child('licenses/'+$key+'/status').val() !== 'suspended') || (data.child('uid').val() === auth.uid && !newData.exists()))",
+          ".validate": "!newData.exists() || (newData.child('to').isString() && newData.child('to').val().length <= 15 && newData.child('text').isString() && newData.child('text').val().length <= 1000 && newData.child('sendAt').isNumber())"
+        }
+      }
+    }
+  }
+}

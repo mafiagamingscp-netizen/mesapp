@@ -1,0 +1,9 @@
+خطوات التشغيل (مرة واحدة، من موقع Firebase، مشروع communication-ebba7) — لو فعّلت لوحة المالك السحابية قبل كده تخطى 1 و2 و3:
+1) Authentication ← Sign-in method: فعّل Anonymous و Email/Password.
+2) Authentication ← Users ← Add user: ad123@lastvix.app + باسورد قوي (6 أحرف+) وانسخ الـ UID.
+3) Realtime Database ← Data: أضف  admins ← الـ UID = true
+4) Realtime Database ← Rules: لو عندك قواعد حالية (فيها tenants)، افتح rules-additions.json وانسخ محتواه جوه "rules": { ... } بجانب القواعد الموجودة ثم Publish. لو بتبدأ من الصفر: انسخ database.rules.json كله.
+5) ارفع admin.html بجانب index.html على استضافة HTTPS (أو Firebase Hosting)، وادخل بـ AD123 + باسورد Firebase.
+6) دخول المالك المحلي في التطبيق: AD123 + باسورد جديد (اتسلّم لك في الشات).
+7) سيرفر الواتساب: مجلد wa-bridge (README.txt جواه).
+8) لتفعيل التحقق من الجهاز: لوحة الأدمن ← الدفع والأسعار ← علّم "تفعيل التحقق من الجهاز الجديد" (مقفول افتراضيًا).

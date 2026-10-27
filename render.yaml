@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: lastvix-wa
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASS
+        sync: false
+      - key: PAIR_PHONE
+        sync: false
+      - key: PAGE_TOKEN
+        sync: false
